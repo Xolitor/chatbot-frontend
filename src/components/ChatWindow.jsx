@@ -11,16 +11,14 @@ const ChatWindow = ({ messages }) => {
     }, [messages]);
 
     return (
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="chat-window">
             {messages.map((message, index) => (
-                <Message
-                    key={index}
-                    message={message}
-                    isUser={message.role === 'user'}
-                />
-            ))}
-            <div ref={messagesEndRef} />
-        </div>
+            <div key={index} className={`message ${message.role}`}>
+                <div className="bubble">{message.content}</div>
+            </div>
+    ))}
+</div>
+
     );
 };
 

@@ -1,35 +1,38 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
-const MessageInput = ({ onSendMessage, isLoading }) => {
-    const [message, setMessage] = useState('');
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (message.trim()) {
-            onSendMessage(message);
-            setMessage('');
-        }
+function MessageInput({ onSendMessage, isLoading }) {
+    const [inputValue, setInputValue] = useState(''); // État pour gérer l'entrée utilisateur
+
+    const handleChange = (e) => {
+        setInputValue(e.target.value); // Met à jour l'état avec la valeur du champ d'entrée
+    };
+
+    const handleSendMessage = () => {
+        if (inputValue.trim() === '') return; // Ne pas envoyer de message vide
+        onSendMessage(inputValue); // Appeler la fonction parent avec le message
+        setInputValue(''); // Réinitialiser le champ d'entrée
     };
 
     return (
-        <form onSubmit={handleSubmit} className="flex gap-2 p-4 border-t">
-            <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Type your message..."
-                className="flex-1 rounded-lg border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                disabled={isLoading}
-            />
+        <div className="message-input">
+            <div className="input-field">
+                <input
+                    type="text"
+                    placeholder="Tapez votre message ici..."
+                    value={inputValue} // Liaison avec l'état
+                    onChange={handleChange} // Gestion des modifications de l'entrée
+                    disabled={isLoading} // Désactiver le champ si un message est en cours d'envoi
+                />
+            </div>
             <button
-                type="submit"
-                disabled={isLoading}
-                className={`px-4 py-2 rounded-lg bg-blue-500 text-white
-                    ${isLoading ? 'opacity-50' : 'hover:bg-blue-600'}`}
+                className="send-button"
+                onClick={handleSendMessage} // Gestion de l'envoi du message
+                disabled={isLoading || inputValue.trim() === ''} // Désactiver si vide ou en cours de chargement
             >
-                {isLoading ? 'Sending...' : 'Send'}
+                {isLoading ? 'Envoi...' : 'Envoyer'}
             </button>
-        </form>
+        </div>
     );
-};
+}
 
 export default MessageInput;
