@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
 import Message from './Message';
 
 const ChatWindow = ({ messages }) => {
@@ -13,10 +14,17 @@ const ChatWindow = ({ messages }) => {
     return (
         <div className="chat-window">
             {messages.map((message, index) => (
-            <div key={index} className={`message ${message.role}`}>
-                <div className="bubble">{message.content}</div>
-            </div>
-    ))}
+                <div
+                    key={index}
+                    className={`message ${message.role}`}
+                >
+                    {message.role === 'assistant' ? (
+                        <ReactMarkdown className="bubble">{message.content}</ReactMarkdown>
+                    ) : (
+                        <div className="bubble">{message.content}</div>
+                    )}
+                </div>
+        ))}
 </div>
 
     );

@@ -4,6 +4,16 @@ import Header from '../components/Header';
 import ChatWindow from '../components/ChatWindow';
 import MessageInput from '../components/MessageInput';
 import { chatApi } from '../services/api';
+import { v4 as uuidv4 } from 'uuid';
+
+// import clippy from 'clippyjs/dist/clippy';
+
+// const clippy = require('clippyjs');
+ 
+// clippy.load('Merlin', (agent) => {
+//     // do anything with the loaded agent
+//     agent.show();
+// });
 
 function ChatPage({ user, onLogout }) {
     const [messages, setMessages] = useState([]);
@@ -12,20 +22,25 @@ function ChatPage({ user, onLogout }) {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        const newSession = `session-${Date.now()}`;
+        const newSession = `session-${uuidv4()}`;
         setCurrentSession(newSession);
         loadSessions();
     }, []);
 
     useEffect(() => {
-        if (currentSession) {
+        if (currentSession && currentSession !== 'NewSession') {
             loadHistory();
+        } else if (currentSession === 'NewSession') {
+            const newSession = `session-${uuidv4()}`;
+            setCurrentSession(newSession);
+            loadSessions();
         }
     }, [currentSession]);
 
     const loadSessions = async () => {
         try {
             const response = await chatApi.getAllSessions();
+            console.log('Sessions:', response);
             setSessions(response);
         } catch (error) {
             console.error('Error loading sessions:', error);
@@ -41,6 +56,11 @@ function ChatPage({ user, onLogout }) {
         }
     };
 
+    // clippy.load('Merlin', (agent) => {
+    //     // do anything with the loaded agent
+    //     agent.show();
+    // });
+
     const handleSendMessage = async (content) => {
         if (!currentSession) return;
         setIsLoading(true);
@@ -54,6 +74,7 @@ function ChatPage({ user, onLogout }) {
         } catch (error) {
             console.error('Error sending message:', error);
         } finally {
+            loadSessions();
             setIsLoading(false);
         }
     };

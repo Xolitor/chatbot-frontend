@@ -13,6 +13,12 @@ function MessageInput({ onSendMessage, isLoading }) {
         setInputValue(''); // Réinitialiser le champ d'entrée
     };
 
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleSendMessage();
+        }
+    };
+
     return (
         <div className="message-input">
             <div className="input-field">
@@ -21,6 +27,7 @@ function MessageInput({ onSendMessage, isLoading }) {
                     placeholder="Tapez votre message ici..."
                     value={inputValue} // Liaison avec l'état
                     onChange={handleChange} // Gestion des modifications de l'entrée
+                    onKeyPress={handleKeyPress} // Gestion de l'appui sur la touche Entrée
                     disabled={isLoading} // Désactiver le champ si un message est en cours d'envoi
                 />
             </div>

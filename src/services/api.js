@@ -12,12 +12,12 @@ export const chatApi = {
     },
 
     getHistory: async (sessionId) => {
-        const response = await axios.get(`${API_URL}/history/${sessionId}`);
+        const response = await axios.get(`${API_URL}/chat/history/${sessionId}`);
         return response.data;
     },
 
     getAllSessions: async () => {
-        const response = await axios.get(`${API_URL}/sessions`);
+        const response = await axios.get(`${API_URL}/chat/sessions`);
         return response.data;
     }
 };

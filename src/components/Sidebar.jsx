@@ -4,7 +4,6 @@ import ConversationsList from './ConversationsList';
 function Sidebar({ sessions, currentSession, onSessionChange }) {
     return (
         <div className="sidebar">
-
             {/* Liste des agents */}
             <div className="sidebar__section sidebar__section">
                 <h2 className="sidebar__title">Agents</h2>

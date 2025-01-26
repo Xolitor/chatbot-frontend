@@ -3,6 +3,13 @@ const ConversationsList = ({ sessions, currentSession, onSessionChange }) => {
         <div className="conversations-list">
             <h2 className="conversations-list__title">Conversations</h2>
             <div className="conversations-list__items">
+                    <button
+                        key="New Session"
+                        onClick={() => onSessionChange('NewSession')}
+                        className={`conversations-list__item`}
+                    >
+                        + Start New Session
+                    </button>
                 {sessions.map((session) => (
                     <button
                         key={session}

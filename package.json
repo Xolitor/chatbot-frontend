@@ -9,10 +9,12 @@
     "cra-template": "1.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-markdown": "^9.0.3",
     "react-router-dom": "^7.1.1",
     "react-scripts": "5.0.1",
     "sass": "^1.83.1",
     "tailwindcss": "^3.4.17",
+    "uuid": "^11.0.5",
     "web-vitals": "^4.2.4"
   },
   "scripts": {
@@ -42,6 +44,7 @@
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.9",
     "autoprefixer": "^10.4.20",
+    "clippyjs": "^0.0.3",
     "postcss": "^8.4.49"
   }
 }
