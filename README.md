@@ -1,70 +1,156 @@
-# Getting Started with Create React App
+# **Agent Conversationnel - Frontend**
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Ce projet est l'interface frontend de notre agent conversationnel éducatif. Il utilise React et SCSS pour offrir une expérience utilisateur moderne et personnalisée.
 
-## Available Scripts
+## **Structure et Architecture**
 
-In the project directory, you can run:
+Le projet est organisé de manière modulaire pour faciliter la maintenance et l'évolutivité.
 
-### `npm start`
+### **Arborescence du Projet**
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```plaintext
+src/
+├── components/         # Composants réutilisables
+│   ├── AgentList.jsx
+│   ├── ChatWindow.jsx
+│   ├── ConversationsList.jsx
+│   ├── Header.jsx
+│   ├── Message.jsx
+│   ├── MessageInput.jsx
+│   └── Sidebar.jsx
+├── pages/              # Pages principales
+│   ├── ChatPage.jsx
+│   └── HomePage.jsx
+├── services/           # Services pour les appels API
+│   └── api.js
+├── styles/             # Fichiers SCSS organisés par composant/page
+│   ├── AgentList.scss
+│   ├── ChatPage.scss
+│   ├── ChatWindow.scss
+│   ├── ConversationsList.scss
+│   ├── Header.scss
+│   ├── MessageInput.scss
+│   ├── Sidebar.scss
+│   ├── settings.scss   # Variables SCSS globales
+│   ├── variables.scss  # Variables spécifiques (ex : couleurs, breakpoints)
+│   └── index.scss      # Import centralisé des styles
+├── App.js              # Point d'entrée principal de l'application
+├── index.js            # Point d'entrée React
+└── clippyjs.d.ts       # Types pour la bibliothèque ClippyJS
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## **Description des Composants**
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### **1. AgentList**
 
-### `npm run build`
+- **Rôle** : Affiche une liste d'agents conversationnels disponibles (ex. Maths, Français, Histoire).
+- **Style associé** : `AgentList.scss`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### **2. sdfChatWindows**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Rôle** : Affiche l'historique des messages sous forme de conversation.
+- **Fonctionnalité** : Inclut un défilement fluide automatique au chargement et à l'ajout de nouveaux messages.
+- **Style associé** : `ChatWindow.scss`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### **3. ConversationsList**
 
-### `npm run eject`
+- **Rôle** : Liste des conversations enregistrées.
+- **Fonctionnalité** : Permet de sélectionner ou de créer une nouvelle session de conversation.
+- **Style associé** : `ConversationsList.scss`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### **4. Header**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Rôle** : Barre supérieure de navigation affichant le nom de l'utilisateur et un menu déroulant.
+- **Fonctionnalité** : Inclut un bouton de déconnexion.
+- **Style associé** : `Header.scss`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### **5. ChatWindow**
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- **Rôle** : Affiche un message individuel (utilisateur ou assistant) avec un formatage markdown si nécessaire.
+- **Style associé** : Aucun spécifique (intégré à `ChatWindow.scss`).
 
-## Learn More
+### **6. MessageInput**
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **Rôle** : Champ de saisie pour envoyer un message.
+- **Fonctionnalité** : Désactive l'envoi lorsque le message est vide ou que l'envoi est en cours.
+- **Style associé** : `MessageInput.scss`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### **7. Sidebar**
 
-### Code Splitting
+- **Rôle** : Barre latérale regroupant les composants `ConversationsList` et `AgentList`.
+- **Style associé** : `Sidebar.scss`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+## **Pages**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### **1. ChatPage**
 
-### Making a Progressive Web App
+- **Description** : Page principale où l'utilisateur interagit avec l'agent conversationnel.
+- **Structure** :
+  - `Header` (haut de la page)
+  - `Sidebar` (à gauche)
+  - `ChatWindow` et `MessageInput` (au centre)
+- **Style associé** : `ChatPage.scss`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### **2. HomePage**
 
-### Advanced Configuration
+- **Description** : Page d'accueil du projet (), servant de point d'entrée, n'a pas de fonctionnalités particulières.
+- **Fonctionnalité** : Contient un lien pour accéder à la `ChatPage`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+## **Architecture SCSS**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+- Chaque composant ou page a son propre fichier SCSS.
+- Les fichiers SCSS incluent uniquement les styles nécessaires au composant ou à la page concernée.
+- Les variables globales (couleurs, breakpoints, etc.) sont définies dans `variables.scss` et importées dans chaque fichier.
+- `index.scss` centralise l'import de tous les styles.
 
-### `npm run build` fails to minify
+### **Variables principales (dans **variable.scss**)**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **Couleurs** :
+  ```scss
+  $primary-color: #145da0;
+  $secondary-color: #0c2d48;
+  $accent-color: #2e8bc0;
+  $background-color: #b1d4e0;
+  ```
+
+---
+
+## **Initialisation du Projet**
+
+1. **Cloner le dépôt :**
+
+   ```bash
+   git clone https://github.com/Xolitor/chatbot-frontend.git
+   cd chatbot-frontend
+   ```
+
+2. **Installer les dépendances :**
+
+   ```bash
+   npm install
+   ```
+
+3. **Lancer le serveur backend :**
+
+   - Assurez-vous que le backend est configuré et démarré (instructions spécifiques au backend).
+
+4. **Lancer le serveur frontend :**
+
+   ```bash
+   npm start
+   ```
+
+   - L'application sera accessible sur `http://localhost:3000`.
+
+---
+
+## **Démarrage**
+
+- Ouvrez `http://localhost:3000` dans votre navigateur.
+- Utilisez l'interface pour démarrer une nouvelle conversation ou accéder à une session existante.

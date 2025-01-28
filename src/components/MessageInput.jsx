@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clippyIcon from '../clippy.png';
 import { chatApi } from '../services/api';
 
 function MessageInput({currentSession, onSendMessage, isLoading }) {
     const [inputValue, setInputValue] = useState(''); // État pour gérer l'entrée utilisateur
+    const [isNowLoading, setIsNowLoading] = useState(isLoading); // État pour gérer le chargement
 
     const handleChange = (e) => {
         setInputValue(e.target.value); // Met à jour l'état avec la valeur du champ d'entrée
     };
+
+    useEffect(() => {
+        setIsNowLoading(isLoading);
+    }, [isLoading]);
 
     const handleSendMessage = () => {
         if (inputValue.trim() === '') return; // Ne pas envoyer de message vide
@@ -22,7 +27,7 @@ function MessageInput({currentSession, onSendMessage, isLoading }) {
     };
 
     const handleFileUpload = () => {
-        isLoading = true; // Affiche le message de chargement
+        // Affiche le message de chargement
         // Création d'un élément input de type "file"
         const input = document.createElement('input');
         input.type = 'file';
@@ -39,7 +44,6 @@ function MessageInput({currentSession, onSendMessage, isLoading }) {
                 console.log('Fichiers valides:', validFiles);
                 handleUploadToDB(validFiles); // Appelle la fonction pour uploader vers la DB
             } else {
-                isLoading = false; // Cache le message de chargement
                 alert('Veuillez sélectionner uniquement des fichiers PDF ou HTML.');
             }
         };
@@ -49,6 +53,7 @@ function MessageInput({currentSession, onSendMessage, isLoading }) {
     };
 
     const handleUploadToDB = async (files) => {
+        setIsNowLoading(true);
         try {
             const formData = new FormData();
             files.forEach((file, index) => {
@@ -57,9 +62,10 @@ function MessageInput({currentSession, onSendMessage, isLoading }) {
 
             const response = await chatApi.sendRagUpload(formData, currentSession);
         } catch (error) {
+            setIsNowLoading(false);
             console.error('Error sending message:', error);
         } finally {
-            isLoading = false;
+            setIsNowLoading(false);
         }
     }
 
@@ -77,15 +83,15 @@ function MessageInput({currentSession, onSendMessage, isLoading }) {
                     value={inputValue}
                     onChange={handleChange}
                     onKeyPress={handleKeyPress}
-                    disabled={isLoading}
+                    disabled={isNowLoading}
                 />
             </div>
             <button
                 className="send-button"
                 onClick={handleSendMessage}
-                disabled={isLoading || inputValue.trim() === ''}
+                disabled={isNowLoading || inputValue.trim() === ''}
             >
-                {isLoading ? 'Envoi...' : 'Envoyer'}
+                {isNowLoading ? 'Envoi...' : 'Envoyer'}
             </button>
         </div>
     );
