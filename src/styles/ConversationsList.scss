@@ -3,7 +3,7 @@
     border-right: 1px solid #ddd;
     //padding: 1rem; /* Correspond à p-4 */
     display: none; /* Cacher par défaut */
-    height: calc(100% - 75px);
+    height: calc(100% - 300px);
     
     
     @media (min-width: 768px) {
@@ -33,9 +33,11 @@
         background-color: transparent;
         transition: background-color 0.2s ease;
         color: #ddd;
+        border: none;
 
         &:hover {
-            background-color: #B1D4E0;
+            background-color: $color-accent;
+            color: $color-primary;
         }
     }
 

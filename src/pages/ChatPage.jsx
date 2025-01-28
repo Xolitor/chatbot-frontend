@@ -18,6 +18,7 @@ import { v4 as uuidv4 } from 'uuid';
 function ChatPage({ user, onLogout }) {
     const [messages, setMessages] = useState([]);
     const [sessions, setSessions] = useState([]);
+    const [agents, setAgents] = useState(['Maths', 'Français', 'Histoire', 'RAG']);
     const [currentSession, setCurrentSession] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -49,8 +50,16 @@ function ChatPage({ user, onLogout }) {
 
     const loadHistory = async () => {
         try {
-            const history = await chatApi.getHistory(currentSession);
-            setMessages(history);
+            if (currentSession === 'Maths' || currentSession === 'Français' || currentSession === 'Histoire') {
+                const history = await chatApi.getHistoryTeacher(currentSession);
+                setMessages(history);
+                console.log('History loaded:');
+                return;
+            } else{
+                const history = await chatApi.getHistorySession(currentSession);
+                setMessages(history);
+                console.log('History loaded:');
+            }
         } catch (error) {
             console.error('Error loading history:', error);
         }
@@ -64,18 +73,49 @@ function ChatPage({ user, onLogout }) {
     const handleSendMessage = async (content) => {
         if (!currentSession) return;
         setIsLoading(true);
-        try {
-            const response = await chatApi.sendMessage(content, currentSession);
-            setMessages(prev => [
-                ...prev,
-                { role: 'user', content },
-                { role: 'assistant', content: response.response }
-            ]);
-        } catch (error) {
-            console.error('Error sending message:', error);
-        } finally {
-            loadSessions();
-            setIsLoading(false);
+        if (currentSession === 'Maths' || currentSession === 'Français' || currentSession === 'Histoire') {
+            try {
+                const response = await chatApi.sendTeacherMessage(content, currentSession);
+                setMessages(prev => [
+                    ...prev,
+                    { role: 'user', content },
+                    { role: 'assistant', content: response.response }
+                ]);
+            } catch (error) {
+                console.error('Error sending message:', error);
+            } finally {
+                loadSessions();
+                setIsLoading(false);
+            }
+        } else if (currentSession === 'RAG') {
+            try {
+                console.log('Sending RAG message:', content);
+                const response = await chatApi.sendRagMessage(content, currentSession);
+                setMessages(prev => [
+                    ...prev,
+                    { role: 'user', content },
+                    { role: 'assistant', content: response.response }
+                ]);
+            } catch (error) {
+                console.error('Error sending message:', error);
+            } finally {
+                loadSessions();
+                setIsLoading(false);
+            }
+        } else {
+            try {
+                const response = await chatApi.sendMessage(content, currentSession);
+                setMessages(prev => [
+                    ...prev,
+                    { role: 'user', content },
+                    { role: 'assistant', content: response.response }
+                ]);
+            } catch (error) {
+                console.error('Error sending message:', error);
+            } finally {
+                loadSessions();
+                setIsLoading(false);
+            }
         }
     };
 
@@ -84,13 +124,14 @@ function ChatPage({ user, onLogout }) {
             <Header user={user} onLogout={onLogout} />
             <div className="chat-page__content">
                 <Sidebar
+                    agents={agents}
                     sessions={sessions}
                     currentSession={currentSession}
                     onSessionChange={setCurrentSession}
                 />
                 <div className="chat-page__chat-container">
                     <ChatWindow messages={messages} />
-                    <MessageInput onSendMessage={handleSendMessage} isLoading={isLoading} />
+                    <MessageInput currentSession={currentSession} onSendMessage={handleSendMessage} isLoading={isLoading} />
                 </div>
             </div>
         </div>

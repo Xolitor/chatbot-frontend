@@ -1,18 +1,32 @@
-import { useEffect, useRef } from 'react';
+import { createRef, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import Message from './Message';
 
 const ChatWindow = ({ messages }) => {
-    const messagesEndRef = useRef(null);
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
+    const chatWindowRef = createRef();
+
     useEffect(() => {
-        scrollToBottom();
+        if (chatWindowRef.current) {
+            chatWindowRef.current.scrollTop = 0;
+
+            chatWindowRef.current.scrollTo({
+                top: chatWindowRef.current.scrollHeight,
+                behavior: "smooth",
+            });
+        }
+    }, []);
+
+    useEffect(() => {
+        if (chatWindowRef.current) {
+            chatWindowRef.current.scrollTo({
+                top: chatWindowRef.current.scrollHeight,
+                behavior: "smooth",
+            });
+        }
     }, [messages]);
 
     return (
-        <div className="chat-window">
+        <div className="chat-window" ref={chatWindowRef} >
             {messages.map((message, index) => (
                 <div
                     key={index}
