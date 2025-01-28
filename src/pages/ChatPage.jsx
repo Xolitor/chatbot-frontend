@@ -41,7 +41,6 @@ function ChatPage({ user, onLogout }) {
     const loadSessions = async () => {
         try {
             const response = await chatApi.getAllSessions();
-            console.log('Sessions:', response);
             setSessions(response);
         } catch (error) {
             console.error('Error loading sessions:', error);
@@ -53,12 +52,10 @@ function ChatPage({ user, onLogout }) {
             if (currentSession === 'Maths' || currentSession === 'Français' || currentSession === 'Histoire') {
                 const history = await chatApi.getHistoryTeacher(currentSession);
                 setMessages(history);
-                console.log('History loaded:');
                 return;
             } else{
                 const history = await chatApi.getHistorySession(currentSession);
                 setMessages(history);
-                console.log('History loaded:');
             }
         } catch (error) {
             console.error('Error loading history:', error);
@@ -89,7 +86,6 @@ function ChatPage({ user, onLogout }) {
             }
         } else if (currentSession === 'RAG') {
             try {
-                console.log('Sending RAG message:', content);
                 const response = await chatApi.sendRagMessage(content, currentSession);
                 setMessages(prev => [
                     ...prev,

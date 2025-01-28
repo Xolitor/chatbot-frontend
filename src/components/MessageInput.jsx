@@ -41,7 +41,6 @@ function MessageInput({currentSession, onSendMessage, isLoading }) {
             const validFiles = Array.from(files).filter(file => allowedTypes.includes(file.type));
             
             if (validFiles.length > 0) {
-                console.log('Fichiers valides:', validFiles);
                 handleUploadToDB(validFiles); // Appelle la fonction pour uploader vers la DB
             } else {
                 alert('Veuillez sélectionner uniquement des fichiers PDF ou HTML.');
