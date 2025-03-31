@@ -49,6 +49,12 @@ function ChatPage({ user, onLogout }) {
 
     const loadHistory = async () => {
         try {
+            if (currentSession === 'RAG') {
+                // Clear messages for RAG demonstration
+                setMessages([]);
+                return;
+            }
+            
             if (currentSession === 'Maths' || currentSession === 'Français' || currentSession === 'Histoire') {
                 const history = await chatApi.getHistoryTeacher(currentSession);
                 setMessages(history);
@@ -70,48 +76,52 @@ function ChatPage({ user, onLogout }) {
     const handleSendMessage = async (content) => {
         if (!currentSession) return;
         setIsLoading(true);
-        if (currentSession === 'Maths' || currentSession === 'Français' || currentSession === 'Histoire') {
-            try {
-                const response = await chatApi.sendTeacherMessage(content, currentSession);
-                setMessages(prev => [
-                    ...prev,
-                    { role: 'user', content },
-                    { role: 'assistant', content: response.response }
-                ]);
-            } catch (error) {
-                console.error('Error sending message:', error);
-            } finally {
-                loadSessions();
-                setIsLoading(false);
+    
+        // Ajouter le message utilisateur à la conversation immédiatement
+        setMessages(prev => [...prev, { role: 'user', content }]);
+        
+        try {
+            let response;
+            
+            if (currentSession === 'Maths' || currentSession === 'Français' || currentSession === 'Histoire') {
+                response = await chatApi.sendTeacherMessage(content, currentSession);
+            } else if (currentSession === 'RAG') {
+                response = await chatApi.sendRagMessage(content, currentSession);
+            } else {
+                response = await chatApi.sendMessage(content, currentSession);
             }
-        } else if (currentSession === 'RAG') {
-            try {
-                const response = await chatApi.sendRagMessage(content, currentSession);
-                setMessages(prev => [
-                    ...prev,
-                    { role: 'user', content },
-                    { role: 'assistant', content: response.response }
-                ]);
-            } catch (error) {
-                console.error('Error sending message:', error);
-            } finally {
-                loadSessions();
-                setIsLoading(false);
+            
+            // Vérifier si la réponse est dans un format valide
+            if (!response || typeof response !== 'object') {
+                throw new Error('Format de réponse invalide');
             }
-        } else {
-            try {
-                const response = await chatApi.sendMessage(content, currentSession);
-                setMessages(prev => [
-                    ...prev,
-                    { role: 'user', content },
-                    { role: 'assistant', content: response.response }
-                ]);
-            } catch (error) {
-                console.error('Error sending message:', error);
-            } finally {
-                loadSessions();
-                setIsLoading(false);
-            }
+            
+            // Normaliser la réponse pour assurer un format cohérent
+            const responseContent = typeof response.response === 'string' 
+                ? response.response 
+                : 'La réponse n\'a pas pu être formatée correctement';
+            
+            // Ajouter uniquement la réponse de l'assistant
+            setMessages(prev => [
+                ...prev,
+                { 
+                    role: 'assistant', 
+                    content: responseContent,
+                    metadata: response.metadata || null 
+                }
+            ]);
+        } catch (error) {
+            console.error('Error sending message:', error);
+            setMessages(prev => [
+                ...prev,
+                { 
+                    role: 'assistant',
+                    content: `Désolé, une erreur s'est produite lors du traitement de votre demande. (${error.message || 'Erreur inconnue'})` 
+                }
+            ]);
+        } finally {
+            loadSessions();
+            setIsLoading(false);
         }
     };
 
