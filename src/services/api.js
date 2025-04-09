@@ -43,12 +43,10 @@ export const chatApi = {
             default:
                 teacher_id = 'default_teacher';
         }
-        const teacherSessionId = `teacher_${teacher_id}_${sessionId}`;
-        // const response = await axios.post(`${API_URL}/teacher/${teacher_id}/chat`, {
-        const response = await axios.post(`${API_URL}/chat/chat`, {
+        const response = await axios.post(`${API_URL}/teacher/${teacher_id}/chat`, {
             teacher_id,
             message,
-            session_id: teacherSessionId
+            session_id: session_id
         });
         return response.data;
     },
