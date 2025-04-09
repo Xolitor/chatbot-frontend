@@ -4,7 +4,7 @@ const API_URL = 'http://localhost:8000';
 
 export const chatApi = {
     sendMessage: async (message, sessionId) => {
-        const response = await axios.post(`${API_URL}/chat/smart`, {
+        const response = await axios.post(`${API_URL}/chat/chat`, {
             message,
             session_id: sessionId
         });
@@ -46,7 +46,7 @@ export const chatApi = {
         const response = await axios.post(`${API_URL}/teacher/${teacher_id}/chat`, {
             teacher_id,
             message,
-            session_id: session_id
+            session_id: sessionId
         });
         return response.data;
     },
