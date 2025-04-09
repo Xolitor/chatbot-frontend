@@ -4,7 +4,7 @@ const API_URL = 'http://localhost:8000';
 
 export const chatApi = {
     sendMessage: async (message, sessionId) => {
-        const response = await axios.post(`${API_URL}/chat/chat`, {
+        const response = await axios.post(`${API_URL}/chat/smart`, {
             message,
             session_id: sessionId
         });
@@ -12,15 +12,16 @@ export const chatApi = {
     },
 
     sendRagMessage: async (message, sessionId) => {
-        const response = await axios.post(`${API_URL}/chat/rag`, {
+        const response = await axios.post(`${API_URL}/chat/chat`, {
             message,
-            session_id: sessionId
+            session_id: sessionId,
+            use_rag: true
         });
         return response.data;
     },
 
     sendRagUpload: async (files) => {
-        const response = await axios.post(`${API_URL}/chat/upload`, files);
+        const response = await axios.post(`${API_URL}/chat/uploadv2`, files);
         return response.data;
     },
 
